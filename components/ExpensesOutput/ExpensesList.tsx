@@ -1,10 +1,11 @@
 import * as React from 'react';
 import {StyleSheet, View, Text, FlatList} from 'react-native';
 import {ExpensesObjectType} from '../../screens/AllExpenses';
+import ExpenseItem from './ExpenseItem';
 import ExpensesSummary from './ExpensesSummary';
 
 const renderExpenseItem = (itemData: {item: ExpensesObjectType}) => {
-  return <Text>{itemData.item.description}</Text>;
+  return <ExpenseItem {...itemData.item} />;
 };
 
 const ExpensesList = ({expenses}: {expenses: ExpensesObjectType[]}) => {
