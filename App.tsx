@@ -41,6 +41,7 @@ const ExpensesOverview = () => {
       }}>
       <Bottomtabs.Screen
         name="RecentExpenses"
+        //@ts-ignore
         component={RecentExpenses}
         options={{
           title: 'Recent Expenses',

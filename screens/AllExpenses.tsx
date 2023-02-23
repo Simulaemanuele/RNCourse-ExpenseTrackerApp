@@ -9,7 +9,7 @@ export type ExpensesObjectType = {
   date: Date;
 };
 
-const DUMMY_EXPENSES: ExpensesObjectType[] = [
+export const DUMMY_EXPENSES: ExpensesObjectType[] = [
   {
     id: 'e1',
     description: 'A pair of shoes!',
