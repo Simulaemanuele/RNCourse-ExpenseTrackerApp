@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {StyleSheet, View, Text, FlatList} from 'react-native';
-import {ExpensesObjectType} from '../../screens/AllExpenses';
+import {ExpensesObjectType} from '../../store/expenses-context';
 import ExpenseItem from './ExpenseItem';
 import ExpensesSummary from './ExpensesSummary';
 

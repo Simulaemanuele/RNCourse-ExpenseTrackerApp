@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {GlobalStyles} from '../../constants/styles';
-import {ExpensesObjectType} from '../../screens/AllExpenses';
+import {ExpensesObjectType} from '../../store/expenses-context';
 import ExpensesList from './ExpensesList';
 import ExpensesSummary from './ExpensesSummary';
 
