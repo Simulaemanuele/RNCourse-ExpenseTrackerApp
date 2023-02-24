@@ -22,6 +22,7 @@ import RecentExpenses from './screens/RecentExpenses';
 import AllExpenses from './screens/AllExpenses';
 import {GlobalStyles} from './constants/styles';
 import Icon from 'react-native-vector-icons/Ionicons';
+import IconButton from './components/UI/IconButton';
 
 const Stack = createNativeStackNavigator();
 const Bottomtabs = createBottomTabNavigator();
@@ -38,6 +39,14 @@ const ExpensesOverview = () => {
           backgroundColor: GlobalStyles.colors.primary500,
         },
         tabBarActiveTintColor: GlobalStyles.colors.accent500,
+        headerRight: ({tintColor}) => (
+          <IconButton
+            icon="add"
+            size={24}
+            color={tintColor}
+            onPress={() => {}}
+          />
+        ),
       }}>
       <Bottomtabs.Screen
         name="RecentExpenses"
