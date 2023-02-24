@@ -18,9 +18,12 @@ const ExpenseItem = ({
   const navigation = useNavigation();
 
   const expensePressHandler = () => {
-    navigation.navigate('ManageExpense', {
-      espenseId: id,
-    });
+    navigation.navigate(
+      'ManageExpense' as never,
+      {
+        expenseId: id,
+      } as never,
+    );
   };
 
   return (
