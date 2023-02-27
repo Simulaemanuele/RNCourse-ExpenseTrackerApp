@@ -4,6 +4,7 @@ import {Text, StyleSheet, View} from 'react-native';
 import Button from '../components/UI/Button';
 import IconButton from '../components/UI/IconButton';
 import {GlobalStyles} from '../constants/styles';
+import {ExpensesContext} from '../store/expenses-context';
 
 const ManageExpense = ({
   route,
@@ -12,6 +13,8 @@ const ManageExpense = ({
   route: RouteProp<any>;
   navigation: NavigationProp<any>;
 }) => {
+  const expenseCtx = React.useContext(ExpensesContext);
+
   const editedExpenseId = route.params?.expenseId;
 
   const isEditing = !!editedExpenseId;
@@ -23,6 +26,7 @@ const ManageExpense = ({
   }, [navigation, isEditing]);
 
   const deleteExpenseHandler = () => {
+    expenseCtx.deleteExpense(editedExpenseId);
     navigation.goBack();
   };
 
@@ -31,6 +35,27 @@ const ManageExpense = ({
   };
 
   const confirmHandler = () => {
+    if (isEditing === true) {
+      expenseCtx.updateExpense(editedExpenseId, {
+        data: [
+          {
+            description: 'Test-Update',
+            amount: 19.99,
+            date: new Date('2023-02-23'),
+          },
+        ],
+      });
+    } else {
+      expenseCtx.addExpense({
+        data: [
+          {
+            description: 'Test-Add',
+            amount: 19.99,
+            date: new Date('2023-02-24'),
+          },
+        ],
+      });
+    }
     navigation.goBack();
   };
 

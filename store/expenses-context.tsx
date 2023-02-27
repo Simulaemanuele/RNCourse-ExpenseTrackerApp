@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 export type ExpensesObjectType = {
-  id: string;
-  description: string;
-  amount: number;
-  date: Date;
+  id?: string;
+  description?: string;
+  amount?: number;
+  date?: Date;
 };
 
 export const DUMMY_EXPENSES: ExpensesObjectType[] = [
@@ -72,89 +72,84 @@ export const DUMMY_EXPENSES: ExpensesObjectType[] = [
 
 type ContextType = {
   expenses: ExpensesObjectType[];
-  addExpense: ({
-    description,
-    amount,
-    date,
-  }: {
-    description: string;
-    amount: number;
-    date: string;
-  }) => void;
+  addExpense: (expensesData: State) => void;
   deleteExpense: (id: string) => void;
-  updateExpense: (
-    id: string,
-    {
-      description,
-      amount,
-      date,
-    }: {description: string; amount: number; date: string},
-  ) => void;
+  updateExpense: (id: string, expensesData: State) => void;
 };
 
 export const ExpensesContext = React.createContext<ContextType>({
   expenses: [],
-  addExpense: ({
-    description,
-    amount,
-    date,
-  }: {
-    description: string;
-    amount: number;
-    date: string;
-  }) => {},
+  addExpense: (expensesData: State) => {},
   deleteExpense: (id: string) => {},
-  updateExpense: (
-    id: string,
-    {
-      description,
-      amount,
-      date,
-    }: {description: string; amount: number; date: string},
-  ) => {},
+  updateExpense: (id: string, expensesData: State) => {},
 });
 
-const expensesReducer = (state: any, action: any) => {
+enum ActionKind {
+  ADD = 'ADD',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+}
+
+interface ActionType {
+  type: ActionKind;
+  payload: {
+    id?: string;
+    data?: ExpensesObjectType[];
+  };
+}
+
+interface State {
+  data: ExpensesObjectType[];
+}
+
+function expensesReducer(state: State, action: ActionType) {
   switch (action.type) {
     case 'ADD':
       const id = new Date().toString() + Math.random().toString();
-      return [{...action.payload, id: id}, ...state];
+      // state.data.push({...action.payload.data, id: id,}, ...state.data)
+      return [{...action.payload.data, id: id}, ...state.data];
     case 'UPDATE':
-      const updatableExpenseIndex = state.findIndex(
-        (expense: any) => expense.id === action.payload.id,
+      const updatableExpenseIndex = state.data.findIndex(
+        expense => expense.id === action.payload.id,
       );
-      const updatableExpense = state[updatableExpenseIndex];
+      const updatableExpense = state.data[updatableExpenseIndex];
       const updatedItem = {...updatableExpense, ...action.payload.data};
-      const updatedExpenses = [...state];
+      const updatedExpenses = [...state.data];
       updatedExpenses[updatableExpenseIndex] = updatedItem;
-      return updatableExpense;
+      return updatedExpenses;
     case 'DELETE':
-      return state.filter((expense: any) => expense.id !== action.payload);
+      const filteredState = state.data.filter(
+        expense => expense.id !== action.payload.id,
+      );
+      return filteredState;
     default:
       return state;
   }
+}
+
+const initialStateReducer: State = {
+  data: DUMMY_EXPENSES,
 };
 
 const ExpensesContextProvider = ({children}: {children: React.ReactNode}) => {
-  const [expensesState, dispatch] = React.useReducer(
-    expensesReducer,
-    DUMMY_EXPENSES,
-  );
+  const [expensesState, dispatch] = React.useReducer<
+    (state: State, action: ActionType) => State | ExpensesObjectType[]
+  >(expensesReducer, initialStateReducer as never);
 
-  const addExpense = (expenseData: any) => {
-    dispatch({type: 'ADD', payload: expenseData});
+  const addExpense = (expenseData: State) => {
+    dispatch({type: 'ADD' as ActionKind, payload: {data: expenseData.data}});
   };
 
-  const deleteExpense = (id: any) => {
-    dispatch({type: 'DELETE', payload: id});
+  const deleteExpense = (id: string) => {
+    dispatch({type: 'DELETE' as ActionKind, payload: {id: id}});
   };
 
-  const updateExpense = (id: any, expenseData: any) => {
+  const updateExpense = (id: string, expenseData: State) => {
     dispatch({
-      type: 'UPDATE',
+      type: 'UPDATE' as ActionKind,
       payload: {
         id: id,
-        data: expenseData,
+        data: expenseData.data,
       },
     });
   };
